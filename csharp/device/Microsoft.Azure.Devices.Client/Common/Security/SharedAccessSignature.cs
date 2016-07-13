@@ -125,11 +125,22 @@ namespace Microsoft.Azure.Devices.Client
                 return false;
             }
 
-            IDictionary<string, string> parsedFields = ExtractFieldValues(rawSignature);
-            string signature;
-            bool isSharedAccessSignature = parsedFields.TryGetValue(SharedAccessSignatureConstants.SignatureFieldName, out signature);
 
-            return isSharedAccessSignature;
+            try
+            {
+                IDictionary<string, string> parsedFields = ExtractFieldValues(rawSignature);
+                string signature;
+                bool isSharedAccessSignature = parsedFields.TryGetValue(SharedAccessSignatureConstants.SignatureFieldName, out signature);
+                return isSharedAccessSignature;
+            }
+
+            catch (FormatException)
+            {
+                return false;
+            }
+
+
+
         }
 
         public bool IsExpired()
